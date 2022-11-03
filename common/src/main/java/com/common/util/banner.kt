@@ -3,12 +3,16 @@ package com.common.util
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
+import com.facebook.ads.AdSize.BANNER_HEIGHT_50
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAdView
 
@@ -22,7 +26,7 @@ fun Activity.requestNativeBanner(
 ) {
     AdLoader.Builder(
         this,
-        if (BuildConfig.DEBUG) idNativeBanner else placement
+        placement
     )
         .forNativeAd { nativeAd ->
             if (this != null && !this.isFinishing) {
@@ -66,7 +70,7 @@ fun Activity.requestNativeBanner(
 fun Activity.requestBanner(placement: String, layout: LinearLayout?, listener: BannerCallBack) {
     val adView = AdView(this)
     adView.setAdSize(getAdSize())
-    adView.adUnitId = if (BuildConfig.DEBUG) idBanner else placement
+    adView.adUnitId = placement
     adView.loadAd(
         AdRequest.Builder()
             .build()
@@ -156,3 +160,33 @@ fun populateUnifiedNativeAdView(
 
     adView.setNativeAd(nativeAd)
 }
+
+
+fun Activity.requestFacebookBanner(
+    placement: String,
+    layout: LinearLayout?,
+    listener: BannerCallBack
+) {
+    val adView =
+        com.facebook.ads.AdView(this, placement, BANNER_HEIGHT_50)
+    layout?.addView(adView)
+    adView.loadAd(adView.buildLoadAdConfig().withAdListener(object : AdListener(),
+        com.facebook.ads.AdListener {
+        override fun onError(p0: Ad?, p1: AdError?) {
+            listener.onError()
+        }
+
+        override fun onAdLoaded(p0: Ad?) {
+            listener.onLoaded()
+        }
+
+        override fun onAdClicked(p0: Ad?) {
+
+        }
+
+        override fun onLoggingImpression(p0: Ad?) {
+
+        }
+    }).build())
+}
+

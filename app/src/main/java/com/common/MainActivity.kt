@@ -17,13 +17,16 @@ class MainActivity : AppCompatActivity() {
         val adsContainerLarge: LinearLayout = findViewById(R.id.adsContainerLarge)
         val banner: LinearLayout = findViewById(R.id.adsContainer)
         val adsContainerNative: LinearLayout = findViewById(R.id.adsContainerNative)
+        val adsContainerFb: LinearLayout = findViewById(R.id.adsContainerFb)
+
 
         //todo full screen ads
-        request("", object : FullCallBack {
+        request(idFullScreen, object : FullCallBack {
             override fun onError() {
 
             }
         })
+
         val handler = Handler(Looper.getMainLooper())
         val runnable: Runnable = object : Runnable {
             override fun run() {
@@ -40,8 +43,8 @@ class MainActivity : AppCompatActivity() {
         }
         handler.postDelayed(runnable, 250)
 
-        /*//todo App open
-        requestAppOpen("", object : AppOpenCallBack {
+        //todo App open
+        requestAppOpen(idAppOpen, object : AppOpenCallBack {
             override fun onLoaded() {
                 if (isLoadedAppOpen()) {
                     showAppOpen(object : CallBack {
@@ -55,10 +58,10 @@ class MainActivity : AppCompatActivity() {
             override fun onError() {
 
             }
-        })*/
+        })
 
         //todo native
-        requestNative("",
+        requestNative(idNative,
             R.drawable.btn_ads,
             R.color.black,
             adsContainerLarge,
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         //todo Banner
         requestBanner(
-            "",
+            idBanner,
             banner,
             object : BannerCallBack {
                 override fun onLoaded() {
@@ -89,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         //todo native banner
         requestNativeBanner(
-            "",
+            idNative,
             adsContainerNative,
             R.drawable.btn_ads,
             R.color.black,
@@ -102,5 +105,55 @@ class MainActivity : AppCompatActivity() {
 
                 }
             })
+
+        requestFacebookBanner("YOUR_PLACEMENT_ID", adsContainerFb, object : BannerCallBack {
+            override fun onLoaded() {
+                adsContainerFb.visibility = View.VISIBLE
+                Log.e("requestFacebookBanner", "requestFacebookBanner ---->> onLoaded")
+            }
+
+            override fun onError() {
+                Log.e("requestFacebookBanner", "requestFacebookBanner ---->> onError")
+            }
+        })
+
+        //todo native Facebook
+        requestNativeFacebook("YOUR_PLACEMENT_ID",
+            R.drawable.btn_ads,
+            R.color.black,
+            adsContainerLarge,
+            object : NativeCallBack {
+                override fun onLoaded() {
+                    adsContainerLarge.visibility = View.VISIBLE
+                }
+
+                override fun onError() {
+
+                }
+            })
+
+
+        //todo full screen ads facebook
+        requestFacebook("YOUR_PLACEMENT_ID",
+            object : FullCallBack {
+                override fun onError() {
+                    Log.e("requestFacebook", "requestFacebook ---->> onError")
+                }
+            })
+
+
+        val handlerFb = Handler(Looper.getMainLooper())
+        val runnableFb: Runnable = object : Runnable {
+            override fun run() {
+                if (isLoadedFacebook()) {
+                    showFacebook()
+                } else {
+                    handlerFb.postDelayed(this, 250)
+                }
+            }
+        }
+        handlerFb.postDelayed(runnableFb, 250)
     }
+
+
 }

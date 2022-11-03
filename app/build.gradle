@@ -4,6 +4,17 @@ plugins {
 }
 
 android {
+
+    signingConfigs {
+        live {
+            keyAlias 'commonkey'
+            keyPassword 'commonkey'
+            storeFile file('../keystore/commonkey.jks')
+            storePassword 'commonkey'
+        }
+
+    }
+
     compileSdk 32
 
     defaultConfig {
@@ -20,6 +31,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.live
         }
     }
     compileOptions {

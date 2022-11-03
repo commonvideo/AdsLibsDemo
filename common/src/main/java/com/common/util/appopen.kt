@@ -21,7 +21,7 @@ private fun wasLoadTimeLessThanNHoursAgo(): Boolean {
 fun Context.requestAppOpen(placement: String, listener: AppOpenCallBack) {
     AppOpenAd.load(
         this,
-        if (BuildConfig.DEBUG) idAppOpen else placement,
+        placement,
         AdRequest.Builder().build(),
         AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
         object : AppOpenAd.AppOpenAdLoadCallback() {
