@@ -173,9 +173,9 @@ fun Context.inflateAd(
         val adOptionsView = AdOptionsView(this, nativeAd, nativeAdLayout)
         try {
             adChoicesContainer.removeAllViews()
+            adChoicesContainer.addView(adOptionsView, 0)
         } catch (e: NullPointerException) {
         }
-        adChoicesContainer.addView(adOptionsView, 0)
 
 
         // Create native UI using the ad metadata.
