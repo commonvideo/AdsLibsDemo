@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import com.common.util.databinding.AdsNativeFacebookBinding
 import com.facebook.ads.*
 import com.facebook.ads.AdError
 import com.google.android.gms.ads.*
@@ -155,65 +156,48 @@ fun Context.inflateAd(
 ) {
 
     nativeAd.unregisterView()
-    var nativeAdLayout = NativeAdLayout(this)
+    val nativeAdLayout = NativeAdLayout(this)
     // Add the Ad view into the ad container.
     val inflater = LayoutInflater.from(this)
     // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-    val adView: LinearLayout =
-        inflater.inflate(
-            R.layout.ads_native_facebook,
-            nativeAdLayout,
-            false
-        ) as LinearLayout
+    val adView: AdsNativeFacebookBinding =
+        AdsNativeFacebookBinding.inflate(inflater, nativeAdLayout, false)
+
 
     // Add the AdOptionsView
     try {
         val adChoicesContainer =
-            adView.findViewById<LinearLayout>(R.id.ad_choices_container)
+            adView.adChoicesContainer
         val adOptionsView = AdOptionsView(this, nativeAd, nativeAdLayout)
         adChoicesContainer.removeAllViews()
         adChoicesContainer.addView(adOptionsView, 0)
 
-
-        // Create native UI using the ad metadata.
-        val nativeAdIcon: com.facebook.ads.MediaView =
-            adView.findViewById(R.id.native_ad_icon)
-        val nativeAdTitle = adView.findViewById<AppCompatTextView>(R.id.native_ad_title)
-        val nativeAdMedia: com.facebook.ads.MediaView =
-            adView.findViewById(R.id.native_ad_media)
-        /*TextView nativeAdSocialContext = adView.findViewById(R.id.native_ad_social_context);*/
-        val nativeAdBody = adView.findViewById<AppCompatTextView>(R.id.native_ad_body)
-        val sponsoredLabel =
-            adView.findViewById<AppCompatTextView>(R.id.native_ad_sponsored_label)
-        val nativeAdCallToAction =
-            adView.findViewById<AppCompatButton>(R.id.native_ad_call_to_action)
-
-        nativeAdCallToAction.setBackgroundResource(btnColor)
-        nativeAdCallToAction.setTextColor(btnTxtColor)
+        adView.nativeAdCallToAction.setBackgroundResource(btnColor)
+        adView.nativeAdCallToAction.setTextColor(btnTxtColor)
 
         // Set the Text.
-        nativeAdTitle.text = nativeAd.advertiserName
-        nativeAdBody.text = nativeAd.adBodyText
+        adView.nativeAdTitle.text = nativeAd.advertiserName
+        adView.nativeAdBody.text = nativeAd.adBodyText
         /*nativeAdSocialContext.setText(nativeAd.getAdSocialContext());*/
-        nativeAdCallToAction.visibility =
+        adView.nativeAdCallToAction.visibility =
             if (nativeAd.hasCallToAction()) View.VISIBLE else View.INVISIBLE
-        nativeAdCallToAction.text = nativeAd.adCallToAction
-        sponsoredLabel.text = nativeAd.sponsoredTranslation
+        adView.nativeAdCallToAction.text = nativeAd.adCallToAction
+        adView.nativeAdSponsoredLabel.text = nativeAd.sponsoredTranslation
 
         // Create a list of clickable views
         val clickableViews: MutableList<View> = java.util.ArrayList()
-        clickableViews.add(nativeAdTitle)
-        clickableViews.add(nativeAdCallToAction)
+        clickableViews.add(adView.nativeAdTitle)
+        clickableViews.add(adView.nativeAdCallToAction)
 
         // Register the Title and CTA button to listen for clicks.
         nativeAd.registerViewForInteraction(
-            adView,
-            nativeAdMedia,
-            nativeAdIcon,
+            adView.root,
+            adView.nativeAdMedia,
+            adView.nativeAdIcon,
             clickableViews
         )
 
-        nativeAdLayout.addView(adView)
+        nativeAdLayout.addView(adView.root)
         layout.addView(nativeAdLayout)
 
         listener.onLoaded()

@@ -26,6 +26,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -47,7 +51,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.commonvideo'
                 artifactId = 'coomonutils'
-                version = 'alpha-1.0.7'
+                version = 'alpha-1.0.8'
             }
         }
     }
