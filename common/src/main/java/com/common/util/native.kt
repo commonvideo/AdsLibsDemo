@@ -128,10 +128,11 @@ fun Activity.requestNativeFacebook(
             listener.onError()
         }
 
-        override fun onAdLoaded(p0: Ad?) {
-            p0?.let {
-                inflateAd(nativeAd, btnColor, btnTxtColor, layout, listener)
+        override fun onAdLoaded(ad: Ad?) {
+            if (nativeAd != ad) {
+                return
             }
+            inflateAd(nativeAd, btnColor, btnTxtColor, layout, listener)
         }
 
         override fun onAdClicked(p0: Ad?) {
@@ -152,20 +153,19 @@ fun Context.inflateAd(
     layout: LinearLayout,
     listener: NativeCallBack
 ) {
-    val adView: LinearLayout
+
     nativeAd.unregisterView()
     var nativeAdLayout = NativeAdLayout(this)
     // Add the Ad view into the ad container.
     val inflater = LayoutInflater.from(this)
     // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-    adView =
+    val adView: LinearLayout =
         inflater.inflate(
             R.layout.ads_native_facebook,
             nativeAdLayout,
             false
         ) as LinearLayout
-    nativeAdLayout.addView(adView)
-    layout.addView(nativeAdLayout)
+
     // Add the AdOptionsView
     try {
         val adChoicesContainer =
@@ -212,6 +212,10 @@ fun Context.inflateAd(
             nativeAdIcon,
             clickableViews
         )
+
+        nativeAdLayout.addView(adView)
+        layout.addView(nativeAdLayout)
+
         listener.onLoaded()
     } catch (e: NullPointerException) {
         e.printStackTrace()
