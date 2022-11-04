@@ -171,7 +171,10 @@ fun Context.inflateAd(
         val adChoicesContainer =
             adView.findViewById<LinearLayout>(R.id.adChoicesContainerLib)
         val adOptionsView = AdOptionsView(this, nativeAd, nativeAdLayout)
-        adChoicesContainer.removeAllViews()
+        try {
+            adChoicesContainer.removeAllViews()
+        } catch (e: NullPointerException) {
+        }
         adChoicesContainer.addView(adOptionsView, 0)
 
 
