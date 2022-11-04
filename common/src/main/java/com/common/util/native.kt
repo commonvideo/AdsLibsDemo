@@ -146,7 +146,7 @@ fun Activity.requestNativeFacebook(
     }).build())
 }
 
-fun Context.inflateAd(
+fun Activity.inflateAd(
     nativeAd: com.facebook.ads.NativeAd,
     btnColor: Int,
     btnTxtColor: Int,
