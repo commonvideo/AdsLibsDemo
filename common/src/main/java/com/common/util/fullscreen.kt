@@ -34,19 +34,23 @@ fun isLoaded(): Boolean {
 }
 
 fun Activity.show(listener: CallBack) {
-    mInterstitialAd?.show(this)
-    mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+    if (isLoaded()) {
+        mInterstitialAd?.show(this)
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
 
-        override fun onAdDismissedFullScreenContent() {
-            mInterstitialAd = null
-            listener.onCompleted()
-        }
+            override fun onAdDismissedFullScreenContent() {
+                mInterstitialAd = null
+                listener.onCompleted()
+            }
 
-        override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-            super.onAdFailedToShowFullScreenContent(p0)
-            mInterstitialAd = null
-            listener.onCompleted()
+            override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                super.onAdFailedToShowFullScreenContent(p0)
+                mInterstitialAd = null
+                listener.onCompleted()
+            }
         }
+    } else {
+        listener.onCompleted()
     }
 }
 
